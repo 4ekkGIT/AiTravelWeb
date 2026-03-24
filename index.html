@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AiTravel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+      <nav class="nav-glass">
+        <div class="nav-container">
+
+          <!-- Логотип -->
+          <div class="nav-brand">
+            <div class="logo">
+              <button onclick="location.reload();">
+                <img src="img/AiTravelLogo.png" alt="Logo">
+              </button>
+            </div>
+            <span id="nav-agency-name">AiTravel</span>
+          </div>
+
+          <!-- Ссылки по центру -->
+          <div class="nav-links" id="nav-links">
+            <a href="#searchsection">Туры</a>
+            <a href="#about">О нас</a>
+            <a href="#contacts">Контакты</a>
+          </div>
+
+          <!-- Админ вход в навбаре -->
+          <div class="nav-admin" id="navAdminArea"></div>
+
+          <!-- Бургер для мобильных -->
+          <div class="burger" id="burger">☰</div>
+
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Главный баннер -->
+      <div id="hero">
+        <h1 id="hero-title">
+          <div class="herotitletextA">Откройте Мир</div>
+          <span style="color:var(--accent);">
+            <div class="herotitletextB">Вместе с Нами</div>
+          </span>
+        </h1>
+        <p id="hero-subtitle">
+          Путешествуйте с комфортом. Лучшие туры по популярным<br> направлениям с персональным подбором.
+        </p>
+        <div class="hero-buttons">
+          <button class="btn-hero1" onclick="document.getElementById('searchsection').scrollIntoView({behavior:'smooth'})">🔍 Найти тур</button>
+          <button class="btn-hero2" onclick="typeof toggleChat==='function'&&toggleChat()">💬 Чат с агентом</button>
+        </div>
+      </div>
+
+      <!-- Заголовок секции туров -->
+      <section id="searchsection">
+        <h2 class="search-title">Горящие туры 🔥</h2>
+        <p class="search-subtitle">Выберите один из понравившихся вариантов или свяжитесь с нашим агентом для персонального подбора.</p>
+      
+
+      <!-- Горящие предложения -->
+      <section class="hot-tours">
+        <!-- Фильтры + кнопки управления строятся через JS -->
+        <div class="tour-filters"></div>
+
+        <div class="tours-slider">
+          <button class="slider-btn left" id="slideLeft">‹</button>
+          <div id="toursContainer" class="tours-track"></div>
+          <button class="slider-btn right" id="slideRight">›</button>
+        </div>
+      </section>
+
+      <!-- Админ попап окно -->
+      <div class="ht-overlay" id="htOverlay" onclick="hotToursAdmin.handleOverlayClick(event)">
+        <div class="ht-modal" onclick="event.stopPropagation()">
+
+          <div class="ht-modal-header">
+            <span class="ht-modal-title" id="htModalTitle">Добавить тур</span>
+            <button class="ht-modal-close" onclick="hotToursAdmin.closeModal()">&#x2715;</button>
+          </div>
+
+          <div class="ht-modal-body">
+            <div class="ht-field">
+              <label for="htTitle">Название тура</label>
+              <input type="text" id="htTitle" placeholder="напр. Анталья — всё включено" />
+            </div>
+            <div class="ht-field-row">
+              <div class="ht-field">
+                <label for="htCountry">Страна</label>
+                <select id="htCountry">
+                  <option value="turkey">Турция</option>
+                  <option value="egypt">Египет</option>
+                  <option value="uae">ОАЭ</option>
+                  <option value="thailand">Таиланд</option>
+                  <option value="vietnam">Вьетнам</option>
+                  <option value="other">Другое</option>
+                </select>
+              </div>
+              <div class="ht-field">
+                <label for="htNights">Ночей</label>
+                <input type="number" id="htNights" min="1" max="30" placeholder="7" />
+              </div>
+            </div>
+            <div class="ht-field-row">
+              <div class="ht-field">
+                <label for="htPrice">Цена (от)</label>
+                <input type="number" id="htPrice" placeholder="450" />
+              </div>
+              <div class="ht-field">
+                <label for="htCurrency">Валюта</label>
+                <select id="htCurrency">
+                  <option value="$">USD ($)</option>
+                  <option value="€">EUR (€)</option>
+                  <option value="₸">KZT (₸)</option>
+                </select>
+              </div>
+            </div>
+            <div class="ht-field">
+              <label for="htRating">Рейтинг (1–5)</label>
+              <input type="number" id="htRating" min="1" max="5" step="0.1" placeholder="4.7" />
+            </div>
+            <div class="ht-field">
+              <label>Теги</label>
+              <div class="ht-tag-checks">
+                <label class="ht-tag-check"><input type="checkbox" id="htTagHot" /> Горящий</label>
+                <label class="ht-tag-check"><input type="checkbox" id="htTagSale" /> Скидка</label>
+                <label class="ht-tag-check"><input type="checkbox" id="htTagNew" /> Новинка</label>
+                <label class="ht-tag-check"><input type="checkbox" id="htTagFamily" /> Семейный</label>
+              </div>
+            </div>
+            <div class="ht-field">
+              <label for="htImage">Ссылка на фото</label>
+              <input type="text" id="htImage" placeholder="https://..." oninput="hotToursAdmin.previewImg(this.value)" />
+              <img id="htImgPreview" class="ht-img-preview" alt="Превью фото" />
+            </div>
+          </div>
+
+          <div class="ht-modal-footer">
+            <button class="ht-btn-cancel" onclick="hotToursAdmin.closeModal()">Отмена</button>
+            <button class="ht-btn-save" onclick="hotToursAdmin.saveTour()">Сохранить</button>
+          </div>
+
+        </div>
+      </div>
+      <!-- Конец админ попапа -->
+       </section>
+
+      <section id="about" class="fade-section">
+  <div class="about-inner">
+    <div>
+      <div class="badge-gold">О компании</div>
+      <h2>Ваш надёжный партнёр в путешествиях</h2>
+      <p>Мы работаем с ведущими туроператорами и предоставляем доступ к тысячам актуальных предложений. Наши опытные агенты помогут подобрать идеальный тур под ваш бюджет и предпочтения.</p>
+      <p>Связывайтесь с нами напрямую через Telegram — ответим быстро и подберём лучшие варианты.</p>
+      <button onclick="toggleChat()" class="btn-gold">💬 Написать агенту в Telegram</button>
+
+      <div class="about-stats">
+        <!-- <div><div class="about-stat-value">5+</div><div class="about-stat-label">Лет опыта</div></div> -->
+        <div><div class="about-stat-value">9999+</div><div class="about-stat-label">Довольных клиентов</div></div>
+        <div><div class="about-stat-value">30+</div><div class="about-stat-label">Направлений</div></div>
+      </div>
+    </div>
+
+    <div class="about-image-wrap">
+      <img src="img/about.jpg" alt="О нас" />
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTS -->
+    <section id="contacts" class="fade-section" style="padding:80px 24px;">
+  <div class="max-w-4xl mx-auto text-center">
+    <h2 style="font-size:42px;font-weight:700;margin:0 0 12px;">Свяжитесь с нами</h2>
+    <p style="color:var(--muted);margin-bottom:48px;font-size:15px;">
+      Мы всегда готовы помочь с выбором идеального путешествия
+    </p>
+
+    <div class="contact-grid">
+
+      <div class="contact-card">
+        <div class="contact-icon">📱</div>
+        <div class="contact-title">Телефон</div>
+        <div id="contact-phone" class="contact-link">
+          +7 (707) 757-65-95
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">✈️</div>
+        <div class="contact-title">Telegram</div>
+        <a id="contact-telegram"
+           href="https://t.me/..."
+           target="_blank"
+           class="contact-link">
+          @telegramusername
+        </a>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">🕐</div>
+        <div class="contact-title">Режим работы</div>
+        <div class="contact-text">
+          Пн–Пт: 9:00–20:00<br>
+          Сб–Вс: 10:00–18:00
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+    </main>
+
+    <footer class="footer">
+  <div class="footer-container">
+    
+    <div id="footer-name" class="footer-logo">
+      AiTravel
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <div class="footer-text">
+      © 2026 AiTravel. Все права защищены.<br>
+      Лицензия туроператора №РТО-000000
+    </div>
+
+  </div>
+</footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/chat.js"></script>
+</body>
+</html>
